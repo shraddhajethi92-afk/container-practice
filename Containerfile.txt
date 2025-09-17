@@ -1,0 +1,12 @@
+# Use Red Hat Universal Base Image 9 as the starting point
+FROM registry.access.redhat.com/ubi9/ubi
+
+# Install Apache HTTP Server
+RUN dnf -y install httpd && \
+    dnf clean all
+
+# Expose port 80 for web traffic
+EXPOSE 80
+
+# Run Apache in the foreground (so container doesn’t exit)
+CMD ["/usr/sbin/httpd", "-DFOREGROUND"]
