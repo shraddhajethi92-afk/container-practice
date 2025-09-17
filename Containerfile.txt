@@ -1,12 +1,15 @@
-# Use Red Hat Universal Base Image 9 as the starting point
 FROM registry.access.redhat.com/ubi9/ubi
 
-# Install Apache HTTP Server
-RUN dnf -y install httpd && \
-    dnf clean all
+# Copy your repo definitions into the container
+# (Assuming you keep them in the build context alongside this Containerfile)
+COPY local.repo /etc/yum.repos.d/local.repo
 
-# Expose port 80 for web traffic
+# Copy the repo content from host into the container (optional, big size!)
+# A better way: mount during build/run (see note below)
+# COPY newrepo /mnt/newrepo
+
+# Install httpd from local repo
+RUN dnf -y install httpd && dnf clean all
+
 EXPOSE 80
-
-# Run Apache in the foreground (so container doesn’t exit)
 CMD ["/usr/sbin/httpd", "-DFOREGROUND"]
